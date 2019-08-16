@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as mp
 from itertools import permutations
+from itertools import product
 
 import os
 os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
 
 def valores_gen(lst, size):
-    return list(permutations(lst,size))
+    return list(product(lst,repeat=size))
 
 def F(b,n,e1,e2):
    lst = []
@@ -27,7 +28,7 @@ def main():
     e2 = int(input('e2:'))
     #lst_nums = F(b,n,e1,e2)
     #print(lst_nums)
-    print(valores_gen([0,1], n))
+    print(valores_gen(range(2), n))
 
 if __name__ == '__main__':
     main()
