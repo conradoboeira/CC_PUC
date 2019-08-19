@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as mp
+import matplotlib.pyplot as plt
 from itertools import permutations
 from itertools import product
 
@@ -7,18 +7,38 @@ import os
 os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
 
 def valores_gen(lst, size):
-    return list(product(lst,repeat=size))
+    lst = list(product(lst,repeat=size))
+    resp = []
+    for l in lst:
+        if(not l[0] == 0 or sum(l) == 0):
+            resp.append(l)
+
+    return resp
+
+def lst_to_string(lst):
+    resp = ""
+    for c in lst:
+        resp = resp + str(c)
+    return resp
 
 def F(b,n,e1,e2):
-   lst = []
-   lst.append('0,' + '0'*n)
-   s = '0.1' + '0'*(n-1)
-   #lst.append(s)
-   for i in range(n-1):
-       for j in range(b):
-           l = list(s)
-           l[i] = j
-           lst.append(str(l))
+    mantissas = valores_gen(range(b), n)
+    print("({}; 0,{}) = 0".format(b,lst_to_string(mantissas[0]))) 
+    resultado = [0]
+    for m in mantissas:
+        if(sum(m) == 0): continue
+        for exp in range(e1, e2+1):
+            cp = exp-1
+            num = 0
+            for i in range(n):
+                base = b*m[i]
+                if(base > 0): num += base**cp
+                cp -= 1
+            resultado.append(num)
+            print("({}; 0,{}; {}) = {}".format(b,lst_to_string(m),exp,num)) 
+
+    return resultado
+
 
 
 def main():
@@ -26,9 +46,11 @@ def main():
     n = int(input('n:'))
     e1 = int(input('e1:'))
     e2 = int(input('e2:'))
-    #lst_nums = F(b,n,e1,e2)
-    #print(lst_nums)
-    print(valores_gen(range(2), n))
+    nums = F(b,n,e1,e2)
+    print(len(nums))
+    eixo_y = [0 for i in range(len(nums))]
+    plt.plot(nums,eixo_y)
+    plt.show()
 
 if __name__ == '__main__':
     main()
