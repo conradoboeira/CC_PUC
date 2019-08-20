@@ -47,9 +47,10 @@ def main():
     e1 = int(input('e1:'))
     e2 = int(input('e2:'))
     nums = F(b,n,e1,e2)
-    print(len(nums))
-    eixo_y = [0 for i in range(len(nums))]
-    plt.plot(nums,eixo_y)
+    eixo_x = nums + [-x for x in nums if x > 0]
+    eixo_y = [0 for i in range(len(eixo_x))]
+    plt.plot(eixo_x,eixo_y,'bo')
+    plt.grid()
     plt.show()
 
 if __name__ == '__main__':
