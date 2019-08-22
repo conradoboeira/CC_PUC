@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from itertools import permutations
 from itertools import product
 
 import os
