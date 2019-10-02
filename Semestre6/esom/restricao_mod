@@ -1,0 +1,27 @@
+1) requer a != 0
+2) tamanho do array de retorno da função calcula_raiz é igual 2
+3) requer que b² - 4.a.c >= 0
+4) o array de retorno da função calcula_raiz é de número que pertencem ao conjunto dos reais
+5) substituindo as raizes encontradas na função calcula_raiz na equacao ax²+bx+c o resultado é 0
+
+ocl:
+1)
+context Baskara
+inv: a != 0
+
+2)
+context Baskara::calcula_raiz(): [double]
+post: result.length() == 2
+
+3)
+context Baskara
+inv: b*b - 4*a*c >= 0
+
+4)
+
+5) 
+context Baskara::calcula_raiz(): [double]
+post: (a(result[0]*result[0]) + b*result[0] + c) == 0
+post: (a(result[1]*result[1]) + b*result[1] + c) == 0
+
+
