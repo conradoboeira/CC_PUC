@@ -39,6 +39,7 @@ select * from duncanbda.MUNICIPIOS_POPULACOES;
 insert into ACID_TRABALHO_2019_10
 select * from duncanbda.ACID_TRABALHO_2019_10;
 
+commit;
 ---- Queries -----
 
 select denominacao, mes_ano_acidente, count(*) as numero_acidentes
@@ -50,5 +51,5 @@ order by MES_ANO_ACIDENTE, denominacao;
 select distinct CID10_CATEGORIAS.cat as categoria, CID10_CATEGORIAS.descricao as descricao, natureza_da_lesao
 from ACID_TRABALHO_2019_10 join CID10_SUBCATEGORIAS on ACID_TRABALHO_2019_10.cid_10 = CID10_SUBCATEGORIAS.subcat  
 join CID10_CATEGORIAS on CID10_SUBCATEGORIAS.cat = CID10_CATEGORIAS.cat
-where (AGENTE_CAUSADOR_ACIDENTE like 'Ser Vivo%' and sexo = 'Masculino' and CLASSE_NUM = 5310)
+where (AGENTE_CAUSADOR_ACIDENTE like 'Ser Vivo%' and sexo = 'Masculino' and CNAE20_EMPREGADOR = 5310)
 order by categoria,natureza_da_lesao;
