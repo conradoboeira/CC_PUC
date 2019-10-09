@@ -1,3 +1,4 @@
+// {:autocontract}
 class ConjuntoNat
 {
     var conj: array<nat>;
@@ -11,12 +12,14 @@ class ConjuntoNat
         conj.Length != 0
         && 0 <= tail <= conj.Length
         && conj[0..tail] == Conteudo
+        && forall i,j :: 0<=i < tail  && 0<=j < tail && i != j ==> conj[i] != conj[j]
     }
 
     constructor ()
     ensures InvarianteClasse()
     ensures Conteudo == []
     {
+        // TODO: add nao tem repeticao
         conj := new nat[5];
         Conteudo := [];
         tail := 0;
@@ -30,11 +33,11 @@ class ConjuntoNat
         return tail;
     }
 
+    // trocar nome para pertence ou contem
     method Existe(e:nat) returns (b:bool)
     requires InvarianteClasse()
     ensures InvarianteClasse()
-    ensures e in Conteudo ==> b == true;
-    ensures !(e in Conteudo) ==> b == false;
+    ensures b <==> (e in Conteudo)
     {
         // var pos := Array.IndexOf(conj, e);
         // if(pos > -1) {
@@ -44,11 +47,14 @@ class ConjuntoNat
         //     return false;
         // }
         b := false;
-        for(var i:= 0; i < tail; i:= i+1)
+        var i:=0;
+        while(i < tail)
+        // invariant b == (e in Conteudo[0..i])
         {
-            if(conj[i] == e) {
-                b := true;
-            }
+          if(conj[i] == e) {
+               b := true;
+           }
+           i := i+1;
         }
     }
 
@@ -61,7 +67,8 @@ class ConjuntoNat
     
     {
         // O array contem o elemento e
-        if (Array.IndexOf(conj, e) > -1){
+        var test:= Existe(e);
+        if (test){
             return false;
         }
         // O array nao contem o elemento e
