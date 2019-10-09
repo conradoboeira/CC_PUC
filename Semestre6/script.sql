@@ -82,7 +82,7 @@ order by categoria,natureza_da_lesao;
 ---- Create index -----
 create bitmap index bix_agente on ACID_TRABALHO_2019_10 (AGENTE_CAUSADOR_ACIDENTE);
 create bitmap index bix_sexo on ACID_TRABALHO_2019_10 (sexo);
-create bitmap index bix_classes on CNAE20_CLASSES (CLASSES_NUM);
+create bitmap index bix_classes on ACID_TRABALHO_2019_10 (CNAE20_EMPREGADOR);
 
 drop index bix_agente;
 drop index bix_sexo;
@@ -90,7 +90,7 @@ drop index bix_classes;
 
 create index ix_agente on ACID_TRABALHO_2019_10 (AGENTE_CAUSADOR_ACIDENTE);
 create index ix_sexo on ACID_TRABALHO_2019_10 (sexo);
-create index ix_classes on CNAE20_CLASSES (CLASSES_NUM);
+create index ix_classes on ACID_TRABALHO_2019_10 (CNAE20_EMPREGADOR);
 
 drop index ix_agente;
 drop index ix_sexo;
