@@ -34,5 +34,5 @@ class Baskara:
 
 
 
-b = Baskara(0,5,4)
+b = Baskara(1,5,4)
 print(b.calcula_raiz())

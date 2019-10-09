@@ -21,4 +21,28 @@ context Baskara::calcula_raiz(): [double]
 post: (a(result[0]*result[0]) + b*result[0] + c) == 0
 post: (a(result[1]*result[1]) + b*result[1] + c) == 0
 
+Comandos para o use:
 
+// falha na primeira constraint
+create b1 : Baskara
+!set b1.a := 0
+!set b1.b := 1            
+!set b1.c := 1
+
+// falha na segunda constraint
+!create b2 : Baskara
+!set b2.a := 1    
+!set b2.b := 1
+!set b2.c := 1
+
+// passa nas duas constraints
+!create b3 : Baskara
+!set b3.a := 1
+!set b3.b := 5
+!set b3.c := 4
+
+// passa nas duas constraints
+! create b4 : Baskara
+!set b4.a := -2
+!set b4.b := -1
+!set b4.c := 5
