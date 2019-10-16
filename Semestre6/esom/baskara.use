@@ -12,6 +12,7 @@ attributes
 	r2 : Real
 operations 
 	calcula_raiz()
+	calcula_delta()
 end
 
 -- OCL constraints
@@ -20,11 +21,11 @@ constraints
 context Baskara
 inv aDiferenteDeZero: not (self.a = 0)
 
-context Baskara::calcula_raiz()
-post raizesNaoNulas: (not (r1 = null)) and (not (r2 = null))
-
 context Baskara
 inv deltaNaoNegativo: self.b*self.b - 4*self.a*self.c >= 0
+
+context Baskara::calcula_raiz()
+post raizesNaoNulas: (not (r1 = null)) and (not (r2 = null))
 
 context Baskara::calcula_raiz() 
 post primeiraRaizZeraPolinomio: (self.a*(r1*r1) + self.b*r1 + self.c) = 0
