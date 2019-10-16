@@ -13,7 +13,7 @@ class {:autocontracts} ConjuntoNat
         && conj[0..tail] == Conteudo
         && forall i,j :: 0<=i < tail  && 0<=j < tail && i != j ==> conj[i] != conj[j]
         && tail == |Conteudo|
-        && forall i,j :: 0<=i < tail  && 0<=j < tail && i != j ==> conj[i] != Conteudo[j]
+        // && forall i,j :: 0<=i < tail  && 0<=j < tail && i != j ==> conj[i] != Conteudo[j]
     }
 
     constructor ()
@@ -35,13 +35,6 @@ class {:autocontracts} ConjuntoNat
     method Existe(e:nat) returns (b:bool)
     ensures b == (e in Conteudo)
     {
-        // var pos := Array.IndexOf(conj, e);
-        // if(pos > -1) {
-        //     return true;
-        // }
-        // else {
-        //     return false;
-        // }
         b := false;
         var i:=0;
         while i < tail
@@ -54,39 +47,48 @@ class {:autocontracts} ConjuntoNat
            }
            i := i+1;
         }
+        return b;
     }
 
-    // method Adiciona(e:nat) returns (b:bool)
-    // requires InvarianteClasse()
-    // ensures InvarianteClasse()
-    // ensures e in Conteudo ==> (old(Conteudo) == Conteudo && b == false)
-    // ensures !(e in Conteudo) ==> (Conteudo == old(Conteudo) + [e] 
-    //           && b == true && tail == old(tail) + 1)
+    method Adiciona(e:nat) returns (b:bool)
+    ensures e in Conteudo ==> (Conteudo == old(Conteudo)) && (!b)
+    ensures !(e in Conteudo) ==> (Conteudo == old(Conteudo) + [e] 
+              && b == true && tail == old(tail) + 1)
     
-    // {
-    //     // O array contem o elemento e
-    //     var test:= Existe(e);
-    //     if (test){
-    //         return false;
-    //     }
-    //     // O array nao contem o elemento e
-    //     else{
-    //         if (tail == conj.Length)
-    //         {
-    //             var aux := new nat[2 * conj.Length];
-    //             forall(i | 0 <= i < conj.Length)
-    //             {
-    //                 aux[i] := conj[i];
-    //             }
-    //             conj := aux;
-    //         }
+    {
+        // O array contem o elemento e
+        // var test:= Existe(e);
+        // if (test){
+        //     b:= false;
+        // }
+        b := Existe(e);
+        // O array nao contem o elemento e
+        if(!b){
+            if (tail == conj.Length)
+            {
+                var aux := new nat[2 * conj.Length];
+                forall(i | 0 <= i < conj.Length)
+                {
+                    aux[i] := conj[i];
+                }
+                conj := aux;
+            }
 
-    //         conj[tail] := e;
-    //         tail := tail +1;
-    //         Conteudo := Conteudo + [e];
-    //         return true;
+            conj[tail] := e;
+            tail := tail +1;
+            Conteudo := Conteudo + [e];
+            b:= true;
+        }
+    }
 
-            
-    //     }
-    // }
+    method Uniao(c:ConjuntoNat) returns (r:ConjuntoNat)
+    ensures forall i:: 0<=i< |c.Conteudo|-1 ==>  c.Conteudo[i] in r.Conteudo
+    ensures forall i:: 0<=i< |Conteudo|-1 ==>  Conteudo[i] in r.Conteudo
+    ensures forall i,j :: 0<=i < r.tail  && 0<=j < r.tail && i != j ==> r.conj[i] != r.conj[j]
+    {
+        r := c;
+        forall(i | 0 <= i < conj.Length){
+            var b:= r.Adiciona(conj[i]);
+        }
+    }
 }
