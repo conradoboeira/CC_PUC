@@ -1,19 +1,18 @@
 from collections import namedtuple
+import subprocess
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimage
 import numpy as np
 import os
 import sys
 
-# Apenas para as maquinas dos laboratorios.
-if sys.platform == 'linux':
-    os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
 
 # Tupla com os parametros de cada conjunto de teste.
 Videoset = namedtuple('Videoset', ['path', 'frames', 'extension'])
 
 # Videos de teste disponibilizados.
 video_sets = {
+    'Eagle': Videoset('Eagle', 50, 'jpg'),
     'OldTownCross': Videoset('OldTownCross', 500, 'jpg'),
     'Riverbed': Videoset('Riverbed', 250, 'jpg'),
     'Stefan': Videoset('Stefan', 300, 'jpg'),
@@ -177,16 +176,48 @@ def save_frame(frame_idx, frame, output_dir='output'):
     '''
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    frame_name = 'frame{:04d}.jpg'.format(frame_idx)
+    frame_name = 'frame{}.jpg'.format(frame_idx)
     save_path = os.path.join(output_dir, frame_name)
     mpimage.imsave(save_path, frame.astype('uint8'))
     return frame_idx + 1
 
 
+def write_video(frame_dir: str, output_video: str, frame_rate: int, start_frame=0, frame_format='frame%d.jpg', output_extension='mp4'):
+    '''Grava uma sequencia de imagens utilizando ffmpeg, gerando um video em formato
+
+    Args:
+        frame_dir (str): Diretorio onde estao localizados os quadros do video.
+        output_video (str): Nome do arquivo de video que sera gerado.
+        frame_rate (int): Taxa de quadros por segundo para exibicao do video (normalmente 25 ou 30).
+        start_frame (int, optional): Numero do primeiro quadro do video no diretorio especificado. Por padrao, 0.
+        frame_format (str, optional): Padrao de nome utilizado para os quadros dos videos. Por padrao, 'frame%d.jpg'.
+        output_extension (str, optional): Extensao do video que gerado. Por padrao, 'mp4'.
+    '''
+    print(os.path.join(frame_dir, frame_format))
+    if sys.platform == 'win32':
+        executable = 'ffmpeg.exe'
+    else:
+        executable = './ffmpeg'
+    args = [
+        executable,
+        '-start_number',
+        str(start_frame),
+        '-framerate',
+        str(frame_rate),
+        '-i',
+        os.path.join(frame_dir, frame_format),
+        '-vcodec',
+        'h264',
+        '{}.{}'.format(output_video, output_extension),
+        '-y'
+    ]
+    subprocess.run(args)
+
+
 # Exemplo de utilizacao das principais funcoes.
 if __name__ == '__main__':
     # Carrega as especificacoes de uma sequencia de teste (neste caso, 'Tennis').
-    videoset = video_sets['OldTownCross']
+    videoset = video_sets['Tennis']
 
     # Iteramos sobre os quadros da sequencia de teste, sempre obtendo um par de quadros.
     # A carga dos quadros sempre ocorre no formato RGB.
@@ -202,3 +233,6 @@ if __name__ == '__main__':
 
         # Salvando um quadro
         save_frame(0, frame1)
+
+        # Gerando o video
+        write_video('OldTownCross_Output', 'test2', 75, 0, 'frame%d.jpg')

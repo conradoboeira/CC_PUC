@@ -5,7 +5,6 @@ from collections import namedtuple
 import videolib as vd 
 
 import os
-os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
 
 # Tupla com os parametros de cada conjunto de teste.
 Videoset = namedtuple('Videoset', ['path', 'frames', 'extension'])
@@ -34,16 +33,15 @@ def test():
 
 def main():
     videoset = video_sets['OldTownCross']
-    num_of_interpolated_frames = 2
-    interpol_step = 1.0/(num_of_interpolated_frames +1)
     frame_count = 0
-    for frame1, frame2 in vd.load_frames(videoset, total_frames=20):
+    for frame1, frame2 in vd.load_frames(videoset, total_frames=498):
         print(frame_count)
         frame_count = vd.save_frame(frame_count, frame1)
-        for i in np.arange(interpol_step, 1, interpol_step):
+        for i in np.linspace(0, 1, num = 4)[1:-1]:
             print(frame_count)
             interpol_frame = np.multiply(frame1, i) + np.multiply(frame2, 1-i)
             frame_count = vd.save_frame(frame_count, interpol_frame)
-
+    
+    vd.write_video('output', 'video', 75)
 if __name__ == '__main__':
 	main()
