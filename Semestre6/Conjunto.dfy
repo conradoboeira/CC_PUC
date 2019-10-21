@@ -51,8 +51,8 @@ class {:autocontracts} ConjuntoNat
     }
 
     method Adiciona(e:nat) returns (b:bool)
-    ensures e in Conteudo ==> (Conteudo == old(Conteudo)) && (!b)
-    ensures !(e in Conteudo) ==> (Conteudo == old(Conteudo) + [e] 
+    ensures e in old(Conteudo) ==> (Conteudo == old(Conteudo)) && b == false
+    ensures !(e in old(Conteudo)) ==> (Conteudo == old(Conteudo) + [e] 
               && b == true && tail == old(tail) + 1)
     
     {
@@ -78,17 +78,37 @@ class {:autocontracts} ConjuntoNat
             tail := tail +1;
             Conteudo := Conteudo + [e];
             b:= true;
+        } else {
+            b := false;
         }
     }
 
     method Uniao(c:ConjuntoNat) returns (r:ConjuntoNat)
-    ensures forall i:: 0<=i< |c.Conteudo|-1 ==>  c.Conteudo[i] in r.Conteudo
-    ensures forall i:: 0<=i< |Conteudo|-1 ==>  Conteudo[i] in r.Conteudo
-    ensures forall i,j :: 0<=i < r.tail  && 0<=j < r.tail && i != j ==> r.conj[i] != r.conj[j]
+    ensures forall i:: 0<=i< |c.Conteudo| ==>  c.Conteudo[i] in r.Conteudo
+    ensures forall i:: 0<=i< |Conteudo| ==>  Conteudo[i] in r.Conteudo
+    ensures forall i,j :: 0<=i < |r.Conteudo|  && 0<=j < |r.Conteudo| && i != j ==> r.Conteudo[i] != r.Conteudo[j]
     {
-        r := c;
-        forall(i | 0 <= i < conj.Length){
-            var b:= r.Adiciona(conj[i]);
+        // r := c;
+        // var i := 0;
+        // while(i < tail){
+        //     var b:= r.Adiciona(conj[i]);
+        //     i := i+1;
+        // }
+        r := new ConjuntoNat();
+        r.conj := new nat[tail + c.tail];
+        r.tail := tail + c.tail;
+        forall(i| 0<=i<tail){
+            r.conj[i] := conj[i];
+        }
+        var j := 0;
+        while(j < c.tail)
+        // add invariant
+        {
+            var to_add := c.conj[tail+j];
+            var dentro := Existe(to_add);
+            if(!dentro){
+                r.conj[tail+j]:= to_add;
+            }
         }
     }
 }
