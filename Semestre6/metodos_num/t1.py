@@ -2,16 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
 from collections import namedtuple
-<<<<<<< HEAD
 import os
 os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
 import videolib as vd 
 import sys
-=======
-import videolib as vd 
-
-import os
->>>>>>> a404e967b97d466322934135d240c630c5d57b69
 
 # Tupla com os parametros de cada conjunto de teste.
 Videoset = namedtuple('Videoset', ['path', 'frames', 'extension'])
@@ -24,7 +18,6 @@ video_sets = {
     'Tennis': Videoset('Tennis', 150, 'jpg'),
 }
 
-<<<<<<< HEAD
 # Devolve uma matriz que corresponde a soma de cada bloco de tamanho size
 def sum_matrix(frame, size, step):
     min_x = 0
@@ -138,33 +131,5 @@ def main():
     motion_interpol(video)
     vd.write_video('output', 'video_interpolado', 60)
 
-=======
-def test():
-    videoset = video_sets['OldTownCross']
-    # Iteramos sobre os quadros da sequencia de teste, sempre obtendo um par de quadros.
-    # A carga dos quadros sempre ocorre no formato RGB.
-    for frame1, frame2 in vd.load_frames(videoset, total_frames=1):
-        # Para ver a representacao RGB de um quadro.
-        vd.plot_rgb_frame(frame1)
-
-        # Convertendo o quadro para formato YUV.
-        frame1_yuv = vd.rgb_to_yuv(frame1)
-
-        # Para ver a representacao YUV de um quadro.
-        vd.plot_yuv_frame(frame1_yuv)
-
-def main():
-    videoset = video_sets['OldTownCross']
-    frame_count = 0
-    for frame1, frame2 in vd.load_frames(videoset, total_frames=498):
-        print(frame_count)
-        frame_count = vd.save_frame(frame_count, frame1)
-        for i in np.linspace(0, 1, num = 4)[1:-1]:
-            print(frame_count)
-            interpol_frame = np.multiply(frame1, i) + np.multiply(frame2, 1-i)
-            frame_count = vd.save_frame(frame_count, interpol_frame)
-    
-    vd.write_video('output', 'video', 75)
->>>>>>> a404e967b97d466322934135d240c630c5d57b69
 if __name__ == '__main__':
 	main()
