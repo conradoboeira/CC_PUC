@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy import interpolate
 from collections import namedtuple
 import os
-os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
+#os.environ['QT_PLUGIN_PATH'] = '/opt/anaconda3/lib'
 import videolib as vd 
 import sys
 
