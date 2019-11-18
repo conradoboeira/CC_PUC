@@ -107,10 +107,82 @@ qed
 next
   fix y0::nat
   assume HI: "\<forall>x .  (mult x y0)  = (x * y0)"
-  show  "\<forall>x .  (mult x (Suc y0))  = (x * Suc(y0))"
+  show  "\<forall>x .  (mult x (Suc y0))  = (x * (Suc y0))"
   proof
     fix x0 :: nat
-    have "mult x (Suc y0) = add x (mult x y0)" by (simp only:mult02)
-    also have "... = add x (x * y0)" by (simp only:HI)
+    have "mult x0 (Suc y0) = add x0 (mult x0 y0)" by (simp only:mult02)
+    also have "... = add x0 (x0 * y0)" by (simp only:HI)
+    also have "... = (x0 * (Suc y0))" by (simp add:soma1)
+    finally show "(mult x0 (Suc y0)) = (x0 * (Suc y0))" by simp
+    qed
+  qed
+
+theorem mult2: "\<forall>x .  (mult x 0) = 0"
+  by simp
+
+theorem mult3:"(mult 0 x) = 0"
+proof(induction x)
+  show "( mult 0 0) = 0"
+    by (simp only:mult01)
+next
+  fix x0:: nat
+  assume HI: "(mult 0 x0) = 0"
+  show "(mult 0 (Suc x0)) = 0"
+  proof -
+    have "(mult 0 (Suc x0)) = add 0 (mult 0 x0)" by (simp only:mult02)
+    also have "... = add 0 0" by (simp only:HI)
+    also have "... = 0" by (simp only:soma1)
+    finally show "(mult 0 (Suc x0)) = 0" by simp
+  qed
+qed
+
+theorem mult4:"\<forall>x .  (mult x y)  = (mult y x)"
+proof (induction y)
+  show "\<forall>x .  (mult x 0)  = (mult 0 x)"
+  proof
+    fix x0::nat
+    have " (mult x0 0) = 0" by (simp only:mult01)
+    also have "... = (mult 0 x0)" by (simp only:mult3)
+    finally show "(mult x0 0) = (mult 0 x0)" by simp
+  qed
+next
+  fix x0:: nat
+  assume HI: "\<forall>x . (mult x x0 ) = (mult x0 x)"
+  show "\<forall>x .(mult x (Suc x0)) = (mult (Suc x0) x)"
+  proof
+    fix x1:: nat
+    have "(mult x1 (Suc x0)) = add x1 (mult x1 x0)" by (simp only:mult02)
+    also have "... = add x1 (mult x0 x1)" by (simp only:HI)
+    also have "... = add x1 (x0 * x1)" by (simp only:mult1)
+    also have "... = x1 + (x0 * x1)" by (simp only:soma1)
+    also have "... = (Suc x0) * x1" by simp
+    also have "... = (mult (Suc x0) x1)" by (simp only:mult1)
+    finally show "(mult x1 (Suc x0)) = (mult (Suc x0) x1)" by simp
+  qed
+qed
+
+theorem mult5:"\<forall>x y. mult x (mult y z) = mult (mult x y) z"
+proof (induction z)
+  show "\<forall>x y. mult x (mult y 0) = mult (mult x y) 0"
+  proof(rule allI, rule allI)
+    fix x0::nat and y0::nat
+    have "mult x0 (mult y0 0) = mult x0 0" by (simp only:mult01)
+    also have "... = 0" by (simp only:mult01)
+    also have "... = mult (mult x0 y0) 0" by (simp only:mult01)
+    finally show "(mult x0 (mult y0 0)) = (mult (mult x0 y0) 0)" by simp
+  qed
+next
+fix z0::nat
+assume HI:"\<forall>x y. mult x (mult y z0) = mult (mult x y) z0"
+show "\<forall>x y. mult x (mult y (Suc z0)) = mult (mult x y) (Suc z0)"
+proof(rule allI, rule allI)
+  fix x0::nat and y0::nat
+  have "mult x0 (mult y0 (Suc z0)) = (mult x0 (y0 * (Suc z0)))" by (simp only:mult1)
+  also have "... = (x0 *  y0 * (Suc z0))" by (simp only:mult1)
+  also have "... = ((mult x0 y0) * (Suc z0))" by (simp only:mult1)
+  also have "... = mult (mult x0 y0) (Suc z0)" by (simp only:mult1)
+  finally show "mult x0 (mult y0 (Suc z0)) = mult (mult x0 y0) (Suc z0)" by simp
+qed
+qed
 
 end
