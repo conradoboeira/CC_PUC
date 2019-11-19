@@ -122,19 +122,19 @@ int main(int argc, char **argv){
   buffer = (char*) malloc(size * sizeof(char));
 
 
-	// intialize mutex lock
-	if (pthread_mutex_init(&lock, NULL) != 0) return 1;
+  // intialize mutex lock
+  if (pthread_mutex_init(&lock, NULL) != 0) return 1;
 
-	pthread_t thr[num_threads];
-	char initial_char= 'A';
+  pthread_t thr[num_threads];
+  char initial_char= 'A';
   
   pthread_t self = pthread_self();
   setpriority(&self, SCHED_FIFO, 99);
   
 	for(int i = 0; i < num_threads; i++){
-			char current = initial_char + i;
-			pthread_create(&thr[i], NULL, thread_behaviour, current);
-			setpriority(&thr[i], get_sched(politica), prioridade);
+	  char current = initial_char + i;
+	  pthread_create(&thr[i], NULL, thread_behaviour, current);
+	  setpriority(&thr[i], get_sched(politica), prioridade);
 	}
 
   setpriority(&self, SCHED_FIFO, 1);
@@ -163,7 +163,7 @@ int main(int argc, char **argv){
   }
   
   printf("\n");
-	// destroy variables
-    	pthread_mutex_destroy(&lock);
+  // destroy variables
+  pthread_mutex_destroy(&lock);
 
 }
