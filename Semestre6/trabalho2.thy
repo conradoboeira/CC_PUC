@@ -1,4 +1,5 @@
-theory listas
+-- "Autor: Conrado Boeira"
+theory trabalho2
 imports Main
 begin
 

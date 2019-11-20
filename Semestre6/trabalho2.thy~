@@ -1,4 +1,4 @@
-theory listas
+theory trabalho2
 imports Main
 begin
 
